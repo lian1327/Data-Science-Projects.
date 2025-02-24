@@ -1,0 +1,58 @@
+---
+title: "Assignment8"
+output: html_document
+---
+
+```yaml
+title: "Interactive Iris Dataset App"
+author: "Your Name"
+date: "Today's Date"
+output: html_document
+runtime: shiny
+
+# Interactive Iris Dataset App
+
+This app allows you to explore the `iris` dataset interactively.
+
+## Data Summary
+
+
+```{r}
+summary(iris)
+
+library(shiny)
+
+# Define UI
+fluidPage(
+  titlePanel("Iris Dataset Explorer"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("xvar", "X-axis Variable:", choices = names(iris)[1:4]),
+      selectInput("yvar", "Y-axis Variable:", choices = names(iris)[1:4]),
+      sliderInput("pointsize", "Point Size:", min = 1, max = 10, value = 3)
+    ),
+    
+    mainPanel(
+      plotOutput("scatterPlot")
+    )
+  )
+)
+
+# Define server logic
+server <- function(input, output) {
+  output$scatterPlot <- renderPlot({
+    ggplot(iris, aes_string(x = input$xvar, y = input$yvar, color = "Species")) +
+      geom_point(size = input$pointsize) +
+      theme_minimal() +
+      labs(title = "Interactive Scatter Plot of Iris Dataset",
+           x = input$xvar,
+           y = input$yvar)
+  })
+}
+
+# Run the app
+shinyApp(ui = fluidPage(...), server = server)
+
+```
+
